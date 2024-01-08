@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Value;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,9 +19,10 @@ import java.util.Set;
 public class Author {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer authorId;
 
+    @Column(nullable = false, length = 50)
     private String name;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)

@@ -19,7 +19,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer member_id;
+    private int member_id;
 
     @Column(name="member_name", nullable = false, length = 100)
     private String name;
@@ -28,7 +28,7 @@ public class Member {
     private String address;
     private String password;
 
-    @OneToOne
+    @OneToOne(mappedBy = "member")
     private MemberCard memberCard;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

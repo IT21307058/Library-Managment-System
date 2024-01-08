@@ -15,8 +15,11 @@ import java.util.Date;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer bookid;
+    private int bookid;
+
+    @Column(nullable = false, length = 50)
     private String title;
+    @Column(nullable = false, length = 100)
     private String description;
     private Date lend_date;
 

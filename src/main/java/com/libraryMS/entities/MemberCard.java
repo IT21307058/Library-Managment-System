@@ -14,13 +14,13 @@ import java.util.Date;
 @NoArgsConstructor
 public class MemberCard {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cardNo;
     private Date issuedDate;
 
     private Date expiryDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="member_id", referencedColumnName = "member_id")
+    @OneToOne
+    @JoinColumn(name="member_id")
     private Member member;
 }

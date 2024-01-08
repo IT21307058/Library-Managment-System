@@ -3,6 +3,7 @@ package com.libraryMS.controllers;
 import com.libraryMS.payloads.ApiResponse;
 import com.libraryMS.payloads.AuthorDto;
 import com.libraryMS.services.AuthorService;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class AuthorController {
     private AuthorService authorService;
 
     @PostMapping("/")
-    public ResponseEntity<AuthorDto> createAuthor(@RequestBody AuthorDto authorDto){
+    public ResponseEntity<AuthorDto> createAuthor(@Valid @RequestBody AuthorDto authorDto){
         AuthorDto authorDto1 = this.authorService.createAuthor(authorDto);
 
         return new ResponseEntity<AuthorDto>(authorDto1, HttpStatus.CREATED);

@@ -6,6 +6,7 @@ import com.libraryMS.payloads.ApiResponse;
 import com.libraryMS.payloads.BookDto;
 import com.libraryMS.payloads.MemberDto;
 import com.libraryMS.services.BookService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,15 @@ public class BookController {
     private BookService bookService;
 
     @PostMapping("/{authorid}/")
-    public ResponseEntity<BookDto> createBook(@RequestBody BookDto bookDto,@PathVariable("authorid") Integer authorId){
+    public ResponseEntity<BookDto> createBook(@Valid @RequestBody BookDto bookDto, @PathVariable("authorid") Integer authorId){
         BookDto createdBook = this.bookService.createBook(bookDto, authorId);
 
         return new ResponseEntity<BookDto>(createdBook, HttpStatus.OK);
     }
 
-    @PutMapping ("/{id}")
-    public ResponseEntity<BookDto> lendBook(@RequestBody BookDto bookDto, @PathVariable("id") Integer memberId){
-        BookDto selectMember = this.bookService.lendBook(bookDto, memberId);
+    @PutMapping ("/{bookid}/{id}")
+    public ResponseEntity<BookDto> lendBook(@PathVariable("id") Integer memberId, @PathVariable("bookid") Integer bookid){
+        BookDto selectMember = this.bookService.lendBook(memberId, bookid);
 
         return new ResponseEntity<BookDto>(selectMember, HttpStatus.OK);
     }

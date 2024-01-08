@@ -48,15 +48,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto lendBook(BookDto bookDto, Integer memberId) {
+    public BookDto lendBook(Integer memberId, Integer bookId) {
         Member member = this.memberRepo.findById(memberId).orElseThrow(() -> new ResourceNotFoundException("Member", "member id", memberId));
+        Book book1 = this.bookRepo.findById(bookId).orElseThrow(() -> new ResourceNotFoundException("Book", "Book id", bookId));
 
-        Book book = this.modelMapper.map(bookDto, Book.class);
+//        Book book = this.modelMapper.map(bookDto, Book.class);
 
-        book.setMember(member);
-        book.setLend_date(new Date());
+        book1.setMember(member);
+        book1.setLend_date(new Date());
 
-        Book lendbook = this.bookRepo.save(book);
+        Book lendbook = this.bookRepo.save(book1);
         return this.modelMapper.map(lendbook, BookDto.class);
     }
 
