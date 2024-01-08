@@ -1,10 +1,13 @@
 package com.libraryMS.services.impl;
 
+import com.libraryMS.entities.Author;
 import com.libraryMS.entities.Book;
 import com.libraryMS.entities.Member;
 import com.libraryMS.exception.ResourceNotFoundException;
 import com.libraryMS.payloads.ApiResponse;
+import com.libraryMS.payloads.AuthorDto;
 import com.libraryMS.payloads.BookDto;
+import com.libraryMS.repositories.AuthorRepo;
 import com.libraryMS.repositories.BookRepo;
 import com.libraryMS.repositories.MemberRepo;
 import com.libraryMS.services.BookService;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,10 +31,17 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private ModelMapper modelMapper;
 
-    @Override
-    public BookDto createBook(BookDto bookDto) {
+    @Autowired
+    private AuthorRepo authorRepo;
 
-        Book createBook = this.bookRepo.save(this.modelMapper.map(bookDto, Book.class));
+    @Override
+    public BookDto createBook(BookDto bookDto, Integer authorId) {
+        Author author = this.authorRepo.findById(authorId).orElseThrow(() -> new ResourceNotFoundException("Author", "author id", authorId));
+
+        Book book = this.modelMapper.map(bookDto, Book.class);
+        book.setAuthor(author);
+
+        Book createBook = this.bookRepo.save(book);
 
         BookDto createdBook = this.modelMapper.map(createBook, BookDto.class);
         return createdBook;

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AuthorService {
 
-    AuthorDto createAuthor(AuthorDto authorDto, Integer bookId);
+    AuthorDto createAuthor(AuthorDto authorDto);
 
     void deleteAuthor(Integer authorId);
 

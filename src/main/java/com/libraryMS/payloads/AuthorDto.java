@@ -14,7 +14,7 @@ import java.util.Set;
 public class AuthorDto {
     private Integer authorId;
 
-    private Integer name;
+    private String name;
     private Set<BookDto> books = new HashSet<>();
 
 }
