@@ -1,14 +1,13 @@
 package com.libraryMS.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name="member")
@@ -31,8 +30,16 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private MemberCard memberCard;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private Set<Book> books = new HashSet<>();
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    private Set<Book> books = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "member_book",
+            joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "bookid"))
+    @JsonManagedReference
+    private Set<Book> bookList;
 
 
 }

@@ -25,7 +25,11 @@ public class Author {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    //cascade = CascadeType.ALL: Defines the cascade behavior for this association.
+    // In this scenario, when operations
+    // (like persist, remove, merge, etc.) are performed on an Author entity,
+    // the same operations will be cascaded to its associated Book entities.
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Book> books = new HashSet<>();
 
 }

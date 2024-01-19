@@ -15,6 +15,6 @@ public class AuthorDto {
     private Integer authorId;
 
     private String name;
-    private Set<BookDto> books = new HashSet<>();
+//    private Set<BookDto> books = new HashSet<>();
 
 }

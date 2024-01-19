@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @NoArgsConstructor
 @Getter
@@ -31,9 +29,10 @@ public class MemberDto {
     @Size(min = 3, max = 10, message = "Password must be min of 3 chars and max 10 characters")
     private String password;
 
-    private MemberCardDto memberCardDto;
+//    private MemberCardDto memberCardDto;
 
-    private Set<BookDto> books = new HashSet<>();
+//    private Set<BookDto> books = new HashSet<>();
+//    private Set<BookDto> books = new HashSet<>();
 
 
 
