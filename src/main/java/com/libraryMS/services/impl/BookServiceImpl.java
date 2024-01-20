@@ -5,13 +5,19 @@ import com.libraryMS.entities.Book;
 import com.libraryMS.entities.Member;
 import com.libraryMS.exception.ResourceNotFoundException;
 import com.libraryMS.payloads.BookDto;
+import com.libraryMS.payloads.BookResponse;
 import com.libraryMS.repositories.AuthorRepo;
 import com.libraryMS.repositories.BookRepo;
 import com.libraryMS.repositories.MemberRepo;
 import com.libraryMS.services.BookService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -116,11 +122,53 @@ public class BookServiceImpl implements BookService {
 ////    }
 
     @Override
-    public List<BookDto> getAllBook() {
-        List<Book> allbooks = this.bookRepo.findAll();
+    public BookResponse getAllBook(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
+        Sort sort = null;
+
+        //using param decide asc or desc
+        if(sortDir.equalsIgnoreCase("asc")){
+            sort = Sort.by(sortBy).ascending();
+        }else{
+            sort = Sort.by(sortBy).descending();
+        }
+        // pagination
+        //by default
+//        int pageSize = 5;
+//        int pageNumber = 1;
+
+        // 1 page 5 records and also sort by post id using
+        //this function ####Important
+        //Sort.by(sortBy).descending() we can make descending order
+        Pageable p = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Book> pagepost = this.bookRepo.findAll(p);
+
+        List<Book> allbooks = pagepost.getContent();
 
         List<BookDto> bookDtos = allbooks.stream().map((book) -> this.modelMapper.map(book, BookDto.class)).collect(Collectors.toList());
 
-        return bookDtos;
+        BookResponse bookResponse = new BookResponse();
+
+        bookResponse.setContent(bookDtos);
+        //no of size in page
+        bookResponse.setPageNumber(pagepost.getNumber());
+        bookResponse.setPageSize(pagepost.getSize());
+        bookResponse.setTotalElements(pagepost.getTotalElements());
+        bookResponse.setTotalPages(pagepost.getTotalPages());
+        bookResponse.setLastPage(pagepost.isLast());
+
+
+        return bookResponse;
     }
+
+    @Override
+    public BookResponse searchBook(String keyword) {
+        List<Book> books = this.bookRepo.searchByTitle("%" + keyword + "%");
+        List<BookDto> bookDtos = books.stream().map((book) -> this.modelMapper.map(book, BookDto.class)).collect(Collectors.toList());
+
+        BookResponse bookResponse = new BookResponse();
+        bookResponse.setContent(bookDtos);
+
+        return bookResponse;
+    }
+
 }

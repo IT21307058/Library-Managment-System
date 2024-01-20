@@ -4,6 +4,7 @@ import com.libraryMS.entities.Book;
 import com.libraryMS.entities.Member;
 import com.libraryMS.payloads.ApiResponse;
 import com.libraryMS.payloads.BookDto;
+import com.libraryMS.payloads.BookResponse;
 import com.libraryMS.payloads.MemberDto;
 import com.libraryMS.services.BookService;
 import com.libraryMS.services.FileService;
@@ -35,6 +36,13 @@ public class BookController {
     @Value("images/")
     private String path;
 
+//    @PostMapping("/{authorid}/")
+//    public ResponseEntity<BookDto> createBook(@Valid @RequestBody BookDto bookDto, @PathVariable("authorid") Integer authorId){
+//        BookDto createdBook = this.bookService.createBook(bookDto, authorId);
+//
+//        return new ResponseEntity<BookDto>(createdBook, HttpStatus.OK);
+//    }
+
     @PostMapping("/{authorid}/")
     public ResponseEntity<BookDto> createBook(@Valid @RequestBody BookDto bookDto, @PathVariable("authorid") Integer authorId){
         BookDto createdBook = this.bookService.createBook(bookDto, authorId);
@@ -45,6 +53,13 @@ public class BookController {
     @PutMapping("/{bookid}")
     public ResponseEntity<BookDto> updateBook(@RequestBody BookDto bookDto, @PathVariable("bookid") Integer bookid){
         BookDto bookDto1 = this.bookService.updateBook(bookDto, bookid);
+
+        return new ResponseEntity<BookDto>(bookDto1, HttpStatus.OK);
+    }
+
+    @GetMapping("/{bookid}")
+    public ResponseEntity<BookDto> getOneBook(@PathVariable("bookid") Integer bookid){
+        BookDto bookDto1 = this.bookService.getBookById(bookid);
 
         return new ResponseEntity<BookDto>(bookDto1, HttpStatus.OK);
     }
@@ -64,10 +79,15 @@ public class BookController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<BookDto>> getAllBooks(){
-        List<BookDto> bookDtoList = this.bookService.getAllBook();
+    public ResponseEntity<BookResponse> getAllBooks(
+            @RequestParam (value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam (value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+            @RequestParam (value="sortBy", defaultValue = "bookid", required = false) String sortBy,
+            @RequestParam (value = "sortDir", defaultValue = "asc", required = false) String sortDir
+    ){
+        BookResponse bookResponse = this.bookService.getAllBook(pageNumber, pageSize, sortBy, sortDir);
 
-        return new ResponseEntity<List<BookDto>>(bookDtoList, HttpStatus.OK);
+        return new ResponseEntity<BookResponse>(bookResponse, HttpStatus.OK);
     }
 
     @PostMapping("/image/upload/{bookid}")
@@ -92,4 +112,14 @@ public class BookController {
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource, response.getOutputStream());
     }
+
+    @GetMapping("/search/{keywords}")
+    public ResponseEntity<BookResponse> searchPostByTitle(
+            @PathVariable String keywords
+    ){
+        BookResponse bookResponse = this.bookService.searchBook(keywords);
+
+        return new ResponseEntity<BookResponse>(bookResponse, HttpStatus.OK);
+    }
+
 }

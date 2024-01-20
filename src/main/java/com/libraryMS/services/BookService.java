@@ -3,6 +3,7 @@ package com.libraryMS.services;
 import com.libraryMS.entities.Book;
 import com.libraryMS.payloads.ApiResponse;
 import com.libraryMS.payloads.BookDto;
+import com.libraryMS.payloads.BookResponse;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface BookService {
 
     BookDto getBookById(Integer bookId);
 
-    List<BookDto> getAllBook();
+    BookResponse getAllBook(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
+
+    BookResponse searchBook(String keyword);
 }
